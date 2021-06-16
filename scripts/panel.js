@@ -1,13 +1,16 @@
 chrome.devtools.network.onRequestFinished.addListener((request) => {
   request.getContent((body) => {
     if (request.request && request.request.url) {
-      if (request.request.url.includes("app_id")) {
-        // sendObjectToInspectedPage({
-        //   action: "code",
-        //   content: "console.log(" + JSON.stringify(body) + ")",
-        // });
-
+      if (
+        request.request.url.includes("app_id") ||
+        request.request.url.includes("player.vimeo.com")
+      ) {
         let indiceInicio = body.indexOf('"progressive"');
+
+        if (indiceInicio <= 0) {
+          return;
+        }
+
         body = body.substring(indiceInicio, body.length);
 
         let indiceFinal = body.indexOf("}]}");
